@@ -32,6 +32,7 @@ export async function syncUser() {
     return dbUser;
   } catch (error) {
     console.log("Error in syncUser", error);
+    return null;
   }
 }
 
@@ -56,9 +57,16 @@ export async function getDbUserId() {
   const { userId: clerkId } = await auth();
   if (!clerkId) return null;
 
-  const user = await getUserByClerkId(clerkId);
+  let user = await getUserByClerkId(clerkId);
 
-  if (!user) throw new Error("User not found");
+  // If user doesn't exist in database, sync them first
+  if (!user) {
+    const syncedUser = await syncUser();
+    if (!syncedUser) return null;
+    // Fetch the user again with the proper includes after syncing
+    user = await getUserByClerkId(clerkId);
+    if (!user) return null;
+  }
 
   return user.id;
 }
