@@ -9,7 +9,12 @@ import ProfilePageClient from "./ProfilePageClient";
 
 export async function generateMetadata({ params }: { params: { username: string } }) {
   const user = await getProfileByUsername(params.username);
-  if (!user) return null;
+  if (!user) {
+    return {
+      title: "User Not Found",
+      description: "The requested user profile could not be found.",
+    };
+  }
 
   return {
     title: `${user.name ?? user.username}`,
