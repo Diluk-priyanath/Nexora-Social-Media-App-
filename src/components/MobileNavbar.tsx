@@ -12,14 +12,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
-import { useAuth, useUser, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { useAuth, SignInButton, SignOutButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
 function MobileNavbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { isSignedIn } = useAuth();
-  const { user } = useUser();
   const { theme, setTheme } = useTheme();
 
   return (
@@ -60,14 +59,12 @@ function MobileNavbar() {
                     <BellIcon className="w-4 h-4" />
                     Notifications
                   </Link>
-              <Button variant="ghost" className="flex items-center gap-3 justify-start" asChild>
-                <Link
-                  href={`/profile/${user?.username ?? user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? ""}`}
-                >
-                  <UserIcon className="w-4 h-4" />
-                  Profile
-                </Link>
-              </Button>
+                </Button>
+                <Button variant="ghost" className="flex items-center gap-3 justify-start" asChild>
+                  <Link href="/profile">
+                    <UserIcon className="w-4 h-4" />
+                    Profile
+                  </Link>
                 </Button>
                 <SignOutButton>
                   <Button variant="ghost" className="flex items-center gap-3 justify-start w-full">
